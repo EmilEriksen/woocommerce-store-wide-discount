@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards">
+	<description>WooCommerce Global Disocunt ruleset</description>
+
+    <rule ref="WordPress">
+        <exclude name="Generic.Files.LowercasedFilename" />
+        <exclude name="Generic.Files.EndFileNoNewline" />
+        <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine" />
+        <exclude name="Generic.NamingConventions.CamelCapsFunctionName" />
+        <exclude name="Generic.PHP.ClosingPHPTag" />
+        <exclude name="Generic.PHP.UpperCaseConstant" />
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
+
+        <exclude name="Squiz.Commenting.FileComment.Missing" />
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
+    </rule>
+
+</ruleset>

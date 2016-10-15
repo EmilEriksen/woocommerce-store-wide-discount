@@ -1,0 +1,17 @@
+{
+	"name": "emileriksen/woocommerce-store-wide-discount",
+	"license": "GPL-3.0",
+	"authors": [
+		{
+			"name": "Emil Kjær Eriksen",
+			"email": "hello@emileriksen.me"
+		}
+	],
+	"type": "wordpress-plugin",
+	"require": {
+		"pimple/pimple": "~3.0"
+	},
+	"autoload": {
+        "psr-4": { "WCSWD\\": "includes/" }
+    }
+}
