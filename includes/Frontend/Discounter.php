@@ -20,11 +20,18 @@ class Discounter {
     private $enabled = false;
 
     /**
-     * Whether we should try to make prices ending in .99.
+     * Whether we should try to make prices ending with specific decimals.
      *
      * @var boolean
      */
-    private $nine_nine_pricing = false;
+    private $charm_pricing_enabled = false;
+
+    /**
+     * The decimals prices should end in if charm pricing is enabled.
+     *
+     * @var integer
+     */
+    private $charm_pricing_decimals = -1;
 
     /**
      * Whether pretty pricing is enabled.
@@ -58,7 +65,14 @@ class Discounter {
             return;
         }
 
-        $this->nine_nine_pricing = get_option( 'wcswd_enable_99_pricing' ) === 'yes';
+        $charm_pricing_decimals = absint( get_option( 'wcswd_charm_pricing_decimals', 0 ) );
+        $this->charm_pricing_enabled = Utility::prices_have_decimals() &&
+            $charm_pricing_decimals > 0 &&
+            $charm_pricing_decimals < ( pow( 10, \wc_get_price_decimals() ) - 1 );
+        if ( $this->charm_pricing_enabled ) {
+            $this->charm_pricing_decimals = $charm_pricing_decimals;
+        }
+
         $this->max_discount_percentage = absint( get_option( 'wcswd_pretty_price_max_discount_percentage' ) ) ?: $this->max_discount_percentage;
         $this->pretty_pricing_enabled = $this->max_discount_percentage > 0;
 
@@ -98,21 +112,13 @@ class Discounter {
 
         $adjusted_price = \wp_cache_get( $product->get_id(), 'wcswd_price' );
         if ( false === $adjusted_price ) {
-            /**
-             * We can't use $product->get_*_price() since we're hooked into
-             * that and it would cause infinite loops. Removing this function
-             * from the filter and checking $product->is_on_sale() and afterwards
-             * adding this function to the filter again would be hacky and
-             * causes a lot of recursion (since is_on_sale() also uses
-             * get_*_price()).
-             */
             if ( $this->pretty_pricing_enabled ) {
                 $adjusted_price = Store::pretty_price( $product->get_price( 'edit' ), $this->discount_percentage, $this->max_discount_percentage );
 
-                if ( $this->nine_nine_pricing && wc_get_price_decimals() > 0 ) {
-                    $adjusted_price -= pow( 10, -( wc_get_price_decimals() ) );
+                if ( $this->charm_pricing_enabled ) {
+                    $adjusted_price -= 1 - pow( 10, -( wc_get_price_decimals() ) ) * $this->charm_pricing_decimals;
 
-                    // If we have 0 decimals only substract 1 from numbers ending in 0.
+                    // If we have 0 decimals only substract 1 from numbers ending in 0. E.g. 10 becomes 9.
                 } elseif ( 0 === wc_get_price_decimals() && 0 === $adjusted_price % 10 ) {
                     $adjusted_price -= 1;
                 }

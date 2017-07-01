@@ -24,4 +24,13 @@ final class Utility {
 				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
 		}
     }
+
+	/**
+	 * Checks if prices have decimals.
+	 *
+	 * @return bool Whether prices have decimals.
+	 */
+	public static function prices_have_decimals() {
+		return \wc_get_price_decimals() > 0;
+	}
 }

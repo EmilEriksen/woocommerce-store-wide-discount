@@ -1,6 +1,8 @@
 <?php
 namespace WCSWD\Admin\Settings;
 
+use WCSWD\Helpers\Utility;
+
 /**
  * This class manages the settings section in WooCommerce.
  */
@@ -31,7 +33,7 @@ class StoreWideDiscount extends \WC_Settings_Page {
 	 * @return array
 	 */
 	public function get_settings() {
-		$settings = apply_filters( 'wcswd_settings', array(
+		$settings = array(
 			array( 'title' => __( 'Store-wide Discount settings', 'wcswd' ), 'type' => 'title', 'desc' => '', 'id' => 'wcswd_settings' ),
 			array(
 				'title'   => __( 'Enable store-wide discount', 'wcswd' ),
@@ -75,15 +77,25 @@ class StoreWideDiscount extends \WC_Settings_Page {
                     'max'  => 100,
 				),
 			),
-            array(
-				'title'   => __( 'Enable 99-pricing', 'wcswd' ),
-				'desc'    => __( 'Prices will end in .99 etc. depending on the number of decimals in your store.', 'wcswd' ),
-				'id'      => 'wcswd_enable_99_pricing',
-				'default' => 'no',
-				'type'    => 'checkbox',
-			),
-			array( 'type' => 'sectionend', 'id' => 'wcswd_settings' ),
-		) );
+		);
+
+		if ( Utility::prices_have_decimals() ) {
+			$settings[] = array(
+				'title'   => __( 'Prices end in', 'wcswd' ),
+				'desc'    => __( 'To enable enter a value all prices should end with.', 'wcswd' ),
+				'id'      => 'wcswd_charm_pricing_decimals',
+				'type'    => 'number',
+				'custom_attributes' => array(
+					'min'  => 1,
+					'step' => 1,
+                    'max'  => pow( 10, \wc_get_price_decimals() ) - 1,
+				),
+			);
+		}
+
+		$settings[] = array( 'type' => 'sectionend', 'id' => 'wcswd_settings' );
+
+		$settings = apply_filters( 'wcswd_settings', $settings );
 
 		return apply_filters( 'wcswd_get_settings_' . $this->id, $settings );
 	}
