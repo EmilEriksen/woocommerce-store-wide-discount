@@ -63,8 +63,8 @@ class Discounter {
         $this->pretty_pricing_enabled = $this->max_discount_percentage > 0;
 
         // Simple products.
-        add_filter( 'woocommerce_get_price', array( $this, 'adjust_price' ), 10, 2 );
-        add_filter( 'woocommerce_get_sale_price', array( $this, 'adjust_price' ), 10, 2 );
+        add_filter( 'woocommerce_product_get_price', array( $this, 'adjust_price' ), 10, 2 );
+        add_filter( 'woocommerce_product_get_sale_price', array( $this, 'adjust_price' ), 10, 2 );
 
         /**
          * Variable products.
@@ -107,7 +107,7 @@ class Discounter {
              * get_*_price()).
              */
             if ( $this->pretty_pricing_enabled ) {
-                $adjusted_price = Store::pretty_price( $product->price, $this->discount_percentage, $this->max_discount_percentage );
+                $adjusted_price = Store::pretty_price( $product->get_price( 'edit' ), $this->discount_percentage, $this->max_discount_percentage );
 
                 if ( $this->nine_nine_pricing && wc_get_price_decimals() > 0 ) {
                     $adjusted_price -= pow( 10, -( wc_get_price_decimals() ) );
@@ -117,7 +117,7 @@ class Discounter {
                     $adjusted_price -= 1;
                 }
             } else {
-                $adjusted_price = Store::get_discounted_price( $product->price, $this->discount_percentage );
+                $adjusted_price = Store::get_discounted_price( $product->get_price( 'edit' ), $this->discount_percentage );
             }
 
             \wp_cache_set( $product->get_id(), $adjusted_price, 'wcswd_price' );

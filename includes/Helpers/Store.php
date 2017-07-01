@@ -126,14 +126,16 @@ final class Store {
             return false;
         }
 
-        // If discount is enabled even when the product is on sale the product will always be discounted.
+        // If discount is enabled even when the product is on sale the product
+        // will always be discounted.
         $enabled_on_sale = get_option( 'wcswd_enable_on_sale' ) === 'yes';
         if ( $enabled_on_sale ) {
             return true;
         }
 
-        // Check if product is on sale. The object variables remain the same because we only filter get_*_price().
-        if ( $product->sale_price !== $product->regular_price && $product->sale_price === $product->price ) {
+        // Since we filter the price in get_*_price(), we have to check if the
+        // product is on sale using the "raw" (edit) values.
+        if ( $product->is_on_sale( 'edit' ) ) {
             return false;
         }
 
