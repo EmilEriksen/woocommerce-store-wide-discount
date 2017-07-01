@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Store-wide Discount
- * Version: 1.0.0
+ * Version: 2.0.0
  * Description: Add a discount to all your products!
  * Author: Emil Kjær Eriksen <hello@emileriksen.me>
  * Text Domain: wcswd
@@ -34,7 +34,7 @@ function WCSWD() {
 	return $container;
 }
 
-WCSWD()['version'] = '1.0.0';
+WCSWD()['version'] = '2.0.0';
 WCSWD()['textdomain'] = 'wcswd';
 WCSWD()['plugin_path'] = untrailingslashit( plugin_dir_path( __FILE__ ) );
 WCSWD()['plugin_url'] = untrailingslashit( plugins_url( '/', __FILE__ ) );
