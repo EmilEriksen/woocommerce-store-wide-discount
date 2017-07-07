@@ -126,6 +126,8 @@ class Discounter {
                 $adjusted_price = Store::get_discounted_price( $product->get_price( 'edit' ), $this->discount_percentage );
             }
 
+            $adjusted_price = (string) $adjusted_price;
+
             \wp_cache_set( $product->get_id(), $adjusted_price, 'wcswd_price' );
         }
 
