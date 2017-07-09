@@ -104,7 +104,7 @@ class Discounter {
     public function adjust_price( $price, $product ) {
 
         // Check if product is on sale and apply discount if it isn't.
-        if ( ! Store::is_product_discounted( $product ) ) {
+        if ( ! Store::is_product_discounted( $product ) || empty( $product->get_price( 'edit' ) ) ) {
             return $price;
         }
 
