@@ -80,17 +80,13 @@ class Discounter {
         add_filter( 'woocommerce_product_get_price', array( $this, 'adjust_price' ), 10, 2 );
         add_filter( 'woocommerce_product_get_sale_price', array( $this, 'adjust_price' ), 10, 2 );
 
-        /**
-         * Variable products.
-         *
-         * @see https://github.com/woocommerce/woocommerce/blob/master/includes/class-wc-product-variable.php
-         *
-         * We can simply do this because WooCommerce generates a price hash based on what
-         * functions are hooked into these to filters (#L247-L255). It takes care of transient
-         * caching and everything. Clever!
-         */
+        // Variable products.
+        add_filter( 'woocommerce_get_variation_price', array( $this, 'adjust_price' ), 10, 2 );
+        add_filter( 'woocommerce_get_variation_sale_price', array( $this, 'adjust_price' ), 10, 2 );
         add_filter( 'woocommerce_variation_prices_price', array( $this, 'adjust_price' ), 10, 2 );
         add_filter( 'woocommerce_variation_prices_sale_price', array( $this, 'adjust_price' ), 10, 2 );
+        add_filter( 'woocommerce_product_variation_get_price', array( $this, 'adjust_price' ), 10, 2 );
+        add_filter( 'woocommerce_product_variation_get_sale_price', array( $this, 'adjust_price' ), 10, 2 );
     }
 
     /**
